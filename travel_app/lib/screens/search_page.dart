@@ -71,7 +71,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final query = _searchController.text.trim().toLowerCase();
+    final query = _search_controller.text.trim().toLowerCase();
     final filteredTrips = _trips.where((trip) {
       final titleMatch = trip.title.toLowerCase().contains(query);
       final destinationMatch = trip.destination.toLowerCase().contains(query);
