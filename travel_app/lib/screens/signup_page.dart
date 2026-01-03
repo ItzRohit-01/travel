@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'dashboard_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -93,8 +94,11 @@ class _SignupPageState extends State<SignupPage> {
               backgroundColor: Colors.green,
             ),
           );
-          // Navigate back to login
-          Navigator.pop(context);
+          // Navigate to Dashboard
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardPage()),
+          );
         }
       } catch (e) {
         if (mounted) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'signup_page.dart';
-import 'home_page.dart';
+import 'dashboard_page.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -75,12 +75,11 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.green,
           ),
         );
-// Navigate to Home Page
+        // Navigate to Dashboard
         Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => const HomePage()),
-);
-
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardPage()),
+        );
       }
     } catch (e) {
       if (mounted) {
