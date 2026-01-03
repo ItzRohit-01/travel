@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
+import '../services/trip_service.dart';
+import 'itenary_page.dart';
 
 class PlanTripPage extends StatefulWidget {
   const PlanTripPage({super.key});
@@ -11,8 +14,51 @@ class _PlanTripPageState extends State<PlanTripPage> {
   final _formKey = GlobalKey<FormState>();
   final _tripNameController = TextEditingController();
   final _destinationController = TextEditingController();
+  final _tripService = TripService();
+  final _authService = AuthService();
   DateTime? _startDate;
   DateTime? _endDate;
+  bool _isSubmitting = false;
+
+  int _currentIndex = 1;
+
+Widget _buildBottomNav() {
+  return BottomNavigationBar(
+    currentIndex: _currentIndex,
+     backgroundColor: const Color.fromARGB(255, 0, 0, 0),          // 👈 force background
+  selectedItemColor: Colors.blue,          // 👈 active icon
+  unselectedItemColor: Colors.grey[600],   // 👈 inactive icons
+  type: BottomNavigationBarType.fixed, 
+    onTap: (index) {
+      setState(() {
+        _currentIndex = index;
+      });
+
+      // Example navigation logic
+      if (index == 0) {
+        Navigator.pop(context); // Home
+      } else if (index == 2) {
+        // Profile page later
+      }
+    },
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.add_location_alt),
+        
+        label: 'Plan',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ],
+  );
+}
+
 
   // Popular destinations
   final List<String> destinations = [
@@ -91,7 +137,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
     });
   }
 
-  void _createTrip() {
+  Future<void> _createTrip() async {
     if (!_formKey.currentState!.validate()) return;
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,24 +146,62 @@ class _PlanTripPageState extends State<PlanTripPage> {
       return;
     }
 
-    // Create trip logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Trip "${_tripNameController.text}" created!\n'
-          'Destination: ${_destinationController.text}\n'
-          'Activities: ${selectedActivities.map((a) => a.name).join(", ")}',
-        ),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    final userId = _authService.currentUser?.uid;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You need to log in again.')),
+      );
+      return;
+    }
 
-    // Navigate back after 1 second
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        Navigator.pop(context);
-      }
+    setState(() {
+      _isSubmitting = true;
     });
+
+    try {
+      await _tripService.createTrip(
+        userId: userId,
+        title: _tripNameController.text,
+        destination: _destinationController.text,
+        startDate: _startDate!,
+        endDate: _endDate!,
+        status: 'Planned',
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Trip created successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      
+      // Navigate to itinerary builder
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItineraryPage(
+            tripName: _tripNameController.text,
+            tripStartDate: _startDate!,
+            tripEndDate: _endDate!,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to create trip: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 
   @override
@@ -307,7 +391,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
                           ),
                           borderRadius: BorderRadius.circular(8),
                           color: isSelected
-                              ? Colors.blue.withOpacity(0.1)
+                              ? Colors.blue.withValues(alpha:0.1)
                               : Colors.transparent,
                         ),
                         child: Material(
@@ -347,7 +431,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _createTrip,
+                    onPressed: _isSubmitting ? null : _createTrip,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: Colors.blue,
@@ -356,13 +440,22 @@ class _PlanTripPageState extends State<PlanTripPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Create Trip',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Create Trip',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -371,6 +464,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
           ),
         ),
       ),
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 }
