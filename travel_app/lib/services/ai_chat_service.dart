@@ -15,10 +15,10 @@ class AIChatService {
 
   // System context about the travel app
   static const String systemContext = '''
-You are a helpful, friendly, and knowledgeable travel assistant for the YATRA travel application. 
+You are a helpful, friendly, and knowledgeable travel assistant for the GlobalTrotter travel application. 
 Your role is to help users with all aspects of their travel planning and experience.
 
-About YATRA App:
+About GlobalTrotter App:
 - It's a comprehensive travel planning application
 - Users can plan trips, create itineraries, set budgets, and track their travel history
 - Features include: trip planning, destination search, itinerary management, budget tracking, previous trips view
@@ -85,7 +85,7 @@ Always:
     });
     contents.add({
       'role': 'model',
-      'parts': [{'text': 'I understand. I\'m your YATRA travel assistant, ready to help with all your travel planning needs!'}]
+      'parts': [{'text': 'I understand. I\'m your GlobalTrotter travel assistant, ready to help with all your travel planning needs!'}]
     });
 
     // Add conversation history

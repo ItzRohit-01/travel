@@ -9,6 +9,7 @@ import 'user_tripping_list_page.dart' show UserTripListingPage;
 import 'itenary_page.dart';
 import 'calander.dart';
 import 'community.dart';
+import 'chatbot_screen.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -496,7 +497,7 @@ class _DashboardPageState extends State<DashboardPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ChatBotScreen(),
+              builder: (context) => ChatBotScreen(),
             ),
           );
         },
