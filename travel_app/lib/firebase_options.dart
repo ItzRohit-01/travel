@@ -45,37 +45,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'YOUR_WEB_API_KEY',
-    appId: 'YOUR_WEB_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    authDomain: 'YOUR_AUTH_DOMAIN',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyDDemo_Web_API_Key_Here',
+    appId: '1:578409232570:web:276e0843e92e1005696a8',
+    messagingSenderId: '578409232570',
+    projectId: 'travel-b6ccd',
+    authDomain: 'travel-b6ccd.firebaseapp.com',
+    storageBucket: 'travel-b6ccd.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyDDemo_Android_API_Key_Here',
+    appId: '1:578409232570:android:aa334ee4d405c269696a83',
+    messagingSenderId: '578409232570',
+    projectId: 'travel-b6ccd',
+    storageBucket: 'travel-b6ccd.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY',
-    appId: 'YOUR_IOS_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyDDemo_iOS_API_Key_Here',
+    appId: '1:578409232570:ios:abcdef1234567890',
+    messagingSenderId: '578409232570',
+    projectId: 'travel-b6ccd',
+    storageBucket: 'travel-b6ccd.appspot.com',
     iosBundleId: 'com.example.travelApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'YOUR_MACOS_API_KEY',
-    appId: 'YOUR_MACOS_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyDDemo_macOS_API_Key_Here',
+    appId: '1:578409232570:macos:abcdef1234567890',
+    messagingSenderId: '578409232570',
+    projectId: 'travel-b6ccd',
+    storageBucket: 'travel-b6ccd.appspot.com',
     iosBundleId: 'com.example.travelApp',
   );
 }
