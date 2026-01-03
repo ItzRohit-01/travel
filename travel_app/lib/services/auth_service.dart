@@ -37,7 +37,11 @@ class AuthService {
       );
       return userCredential;
     } on FirebaseAuthException catch (e) {
+      print('Firebase Auth Error: ${e.code} - ${e.message}');
       throw _handleAuthException(e);
+    } catch (e) {
+      print('Unexpected error: $e');
+      throw 'An unexpected error occurred. Please try again.';
     }
   }
 

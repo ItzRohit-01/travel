@@ -45,20 +45,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDDemo_Web_API_Key_Here',
+    apiKey: 'AIzaSyAkl6ph-EGrZjZo69bgSDXrpmEJZNxysZc',
     appId: '1:578409232570:web:276e0843e92e1005696a8',
     messagingSenderId: '578409232570',
     projectId: 'travel-b6ccd',
     authDomain: 'travel-b6ccd.firebaseapp.com',
-    storageBucket: 'travel-b6ccd.appspot.com',
+    storageBucket: 'travel-b6ccd.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDDemo_Android_API_Key_Here',
+    apiKey: 'AIzaSyAkl6ph-EGrZjZo69bgSDXrpmEJZNxysZc',
     appId: '1:578409232570:android:aa334ee4d405c269696a83',
     messagingSenderId: '578409232570',
     projectId: 'travel-b6ccd',
-    storageBucket: 'travel-b6ccd.appspot.com',
+    storageBucket: 'travel-b6ccd.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

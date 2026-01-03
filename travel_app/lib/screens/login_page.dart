@@ -137,14 +137,9 @@ class _LoginPageState extends State<LoginPage> {
   // ---------------- SIGNUP ----------------
 
   void _navigateToSignup() {
-<<<<<<< HEAD
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SignupPage()),
-=======
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Navigate to Signup page')),
->>>>>>> a5a42e28743bdb5a02e7002ff18fcd2bdece8e40
     );
   }
 
