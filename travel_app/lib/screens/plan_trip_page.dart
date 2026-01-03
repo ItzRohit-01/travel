@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
+import '../services/trip_service.dart';
 
 class PlanTripPage extends StatefulWidget {
   const PlanTripPage({super.key});
@@ -11,8 +13,11 @@ class _PlanTripPageState extends State<PlanTripPage> {
   final _formKey = GlobalKey<FormState>();
   final _tripNameController = TextEditingController();
   final _destinationController = TextEditingController();
+  final _tripService = TripService();
+  final _authService = AuthService();
   DateTime? _startDate;
   DateTime? _endDate;
+  bool _isSubmitting = false;
 
   // Popular destinations
   final List<String> destinations = [
@@ -91,7 +96,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
     });
   }
 
-  void _createTrip() {
+  Future<void> _createTrip() async {
     if (!_formKey.currentState!.validate()) return;
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,24 +105,51 @@ class _PlanTripPageState extends State<PlanTripPage> {
       return;
     }
 
-    // Create trip logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Trip "${_tripNameController.text}" created!\n'
-          'Destination: ${_destinationController.text}\n'
-          'Activities: ${selectedActivities.map((a) => a.name).join(", ")}',
-        ),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    final userId = _authService.currentUser?.uid;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You need to log in again.')),
+      );
+      return;
+    }
 
-    // Navigate back after 1 second
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        Navigator.pop(context);
-      }
+    setState(() {
+      _isSubmitting = true;
     });
+
+    try {
+      await _tripService.createTrip(
+        userId: userId,
+        title: _tripNameController.text,
+        destination: _destinationController.text,
+        startDate: _startDate!,
+        endDate: _endDate!,
+        status: 'Planned',
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Trip created successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to create trip: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 
   @override
@@ -347,7 +379,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _createTrip,
+                    onPressed: _isSubmitting ? null : _createTrip,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: Colors.blue,
@@ -356,13 +388,22 @@ class _PlanTripPageState extends State<PlanTripPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Create Trip',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Create Trip',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16),
