@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
-import '../models/trip_model.dart';
+import 'package:travel_app/models/trip_model.dart';
 
 class TripService {
   TripService({http.Client? client}) : _client = client ?? http.Client();

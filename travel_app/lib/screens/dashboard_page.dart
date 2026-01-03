@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import '../models/trip_model.dart';
-import '../services/trip_service.dart';
+import 'package:travel_app/services/auth_service.dart';
+import 'package:travel_app/models/trip_model.dart';
+import 'package:travel_app/services/trip_service.dart';
 import 'plan_trip_page.dart';
 import 'user_profile_pages.dart';
 import 'search_page.dart';
+import 'user_tripping_list_page.dart' show UserTripListingPage;
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -364,11 +365,30 @@ class _DashboardPageState extends State<DashboardPage> {
             );
             return;
           }
-          if (index == 3) {
+          if (index == 2) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const UserProfilePage(),
+                builder: (context) => const UserTripListingPage(),
+              ),
+            );
+            return;
+          }
+          if (index == 3) {
+            final authUser = _authService.currentUser;
+            final profileUser = authUser != null
+                ? UserProfile(
+                    id: authUser.uid,
+                    name: authUser.displayName ?? '',
+                    email: authUser.email ?? '',
+                    phone: authUser.phoneNumber ?? '',
+                    bio: '',
+                  )
+                : null;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserProfilePage(userProfile: profileUser),
               ),
             );
             return;
@@ -391,8 +411,8 @@ class _DashboardPageState extends State<DashboardPage> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
+            icon: Icon(Icons.list_alt),
+            label: 'My Trips',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
