@@ -737,13 +737,23 @@ class _ItineraryPageState extends State<ItineraryPage>
           ],
         ),
         actions: [
-          ElevatedButton(
+          TextButton(
             onPressed: () => Navigator.pop(context),
+            child: const Text('Keep Editing'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/dashboard',
+                (route) => false,
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF667EEA),
             ),
             child: const Text(
-              'Done',
+              'Go to Dashboard',
               style: TextStyle(color: Colors.white),
             ),
           ),
