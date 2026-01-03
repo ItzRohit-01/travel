@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/trip_model.dart';
+import 'plan_trip_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -309,8 +310,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 children: [
                   OutlinedButton.icon(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Plan a trip feature coming soon!')),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PlanTripPage(),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.add),
