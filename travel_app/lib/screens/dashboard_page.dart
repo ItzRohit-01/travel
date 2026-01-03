@@ -158,52 +158,95 @@ class _DashboardPageState extends State<DashboardPage> {
                         // Banner Image Section
                         Container(
                           width: double.infinity,
-                          height: 180,
+                          height: 200,
                           margin: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.blue.withValues(alpha: .8),
-                                Colors.purple.withValues(alpha: 0.8),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
+                                color: Colors.black.withValues(alpha: 0.15),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
                           child: Stack(
+                            fit: StackFit.expand,
                             children: [
-                              Center(
-                                child: Text(
-                                  'Banner Image',
-                                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                              // Background Image
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=400&fit=crop',
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.blue.withValues(alpha: 0.8),
+                                            Colors.purple.withValues(alpha: 0.8),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
                                       ),
+                                      child: Center(
+                                        child: Text(
+                                          'Explore the World',
+                                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                              // Decorative elements
-                              const Positioned(
-                                top: 10,
-                                right: 20,
-                                child: Text(
-                                  '✈️',
-                                  style: TextStyle(fontSize: 32),
+                              // Overlay
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.3),
+                                        Colors.black.withValues(alpha: 0.1),
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              const Positioned(
-                                bottom: 10,
-                                left: 20,
-                                child: Text(
-                                  '🌍',
-                                  style: TextStyle(fontSize: 32),
+                              // Text Overlay
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      '✈️',
+                                      style: TextStyle(fontSize: 48),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Discover Your Next Adventure',
+                                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            shadows: [
+                                              const Shadow(
+                                                blurRadius: 4,
+                                                color: Colors.black45,
+                                                offset: Offset(2, 2),
+                                              ),
+                                            ],
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

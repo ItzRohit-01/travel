@@ -1,49 +1,163 @@
-# Flutter & Dart
+# ============================================================================
+# FLUTTER & DART
+# ============================================================================
 .dart_tool/
 .packages
 .flutter-plugins
 .flutter-plugins-dependencies
 .flutter-configuration
 **/build/
+*.app
+*.apk
+*.aab
+*.ipa
+*.aar
+*.jar
 
-# Android
+# ============================================================================
+# ANDROID
+# ============================================================================
 android/.gradle/
 android/local.properties
 android/app/release/
 android/app/profile/
+android/.gradle/
+android/**/gradle-wrapper.jar
 *.keystore
 *.jks
+android/captures/
+android/gradlew
+android/gradlew.bat
 
+# ============================================================================
 # iOS/macOS
+# ============================================================================
 ios/Pods/
 ios/.symlinks/
 ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 ios/Flutter/Generated.xcconfig
 ios/Flutter/ephemeral/
+ios/Runner/GeneratedPluginRegistrant.*
 macos/Pods/
 macos/.symlinks/
 macos/Flutter/ephemeral/
+macos/Flutter/Flutter-Release.xcconfig
+macos/Flutter/Flutter-Debug.xcconfig
 
-# Windows/Linux desktop
+# ============================================================================
+# WINDOWS/LINUX DESKTOP
+# ============================================================================
 windows/flutter/ephemeral/
+windows/flutter/ephemeral/.plugin_symlinks
+windows/flutter/generated_plugin_registrant.*
 linux/flutter/ephemeral/
+linux/flutter/generated_plugin_registrant.*
 
-# Web
+# ============================================================================
+# WEB
+# ============================================================================
 web/.dart_tool/
+web/main.dart.js
 
-# IDE
+# ============================================================================
+# IDE & EDITORS
+# ============================================================================
 .idea/
 .vscode/
+.vs/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 *.iml
+.metadata
 
-# Python/Django backend
+# ============================================================================
+# OS & SYSTEM FILES
+# ============================================================================
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# ============================================================================
+# PYTHON/DJANGO BACKEND
+# ============================================================================
+# Byte-compiled Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Django
 *.sqlite3
-.env
-venv/
-.venv/
+*.db
+db.sqlite3
+/media
+/staticfiles
 travel_api/media/
 travel_api/staticfiles/
+*.log
+local_settings.py
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+ENV/
+env.bak/
+venv.bak/
+.env
+.env.local
+.env.*.local
+
+# IDE specific for Django
+.coverage
+.pytest_cache/
+htmlcov/
+
+# ============================================================================
+# MISC
+# ============================================================================
+*.tmp
+*.temp
+.cache/
+node_modules/
+.npm
+.eslintcache
+firebase-debug.log
+google-services.json
+GoogleService-Info.plist
+pubspec.lock
