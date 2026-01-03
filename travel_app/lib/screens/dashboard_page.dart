@@ -6,13 +6,9 @@ import 'plan_trip_page.dart';
 import 'user_profile_pages.dart';
 import 'search_page.dart';
 import 'user_tripping_list_page.dart' show UserTripListingPage;
-<<<<<<< HEAD
-import 'chatbot.dart';
-=======
 import 'itenary_page.dart';
 import 'calander.dart';
 import 'community.dart';
->>>>>>> ece51ad5cd4b7ca2584dab937c8991dda8135681
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -91,15 +87,6 @@ class _DashboardPageState extends State<DashboardPage> {
     if (mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
     }
-  }
-
-  void _openChatbot() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const ChatbotWidget(),
-    );
   }
 
   @override
@@ -437,11 +424,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openChatbot,
-        backgroundColor: Colors.blue.shade700,
-        child: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
