@@ -55,7 +55,7 @@ class TripEvent {
 }
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  const CalendarScreen({super.key});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -866,7 +866,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                         },
                         child: _buildEventCard(event),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),
@@ -1614,7 +1614,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: selectedType,
+                    initialValue: selectedType,
                     decoration: InputDecoration(
                       labelText: 'Trip Type',
                       prefixIcon: const Icon(Icons.category),

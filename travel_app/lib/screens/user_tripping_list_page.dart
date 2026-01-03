@@ -6,7 +6,7 @@ import 'package:travel_app/services/auth_service.dart';
 import 'package:travel_app/services/trip_service.dart';
 
 class UserTripListingPage extends StatefulWidget {
-  const UserTripListingPage({Key? key}) : super(key: key);
+  const UserTripListingPage({super.key});
 
   @override
   State<UserTripListingPage> createState() => _UserTripListingPageState();

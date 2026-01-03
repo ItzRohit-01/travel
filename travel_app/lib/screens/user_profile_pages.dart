@@ -58,9 +58,9 @@ class UserProfilePage extends StatefulWidget {
   final UserProfile? userProfile;
 
   const UserProfilePage({
-    Key? key,
+    super.key,
     this.userProfile,
-  }) : super(key: key);
+  });
 
   @override
   State<UserProfilePage> createState() => _UserProfilePageState();
@@ -1052,7 +1052,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 class TripDetailPage extends StatefulWidget {
   final TripCard trip;
 
-  const TripDetailPage({Key? key, required this.trip}) : super(key: key);
+  const TripDetailPage({super.key, required this.trip});
 
   @override
   State<TripDetailPage> createState() => _TripDetailPageState();
@@ -1448,7 +1448,7 @@ class _TripDetailPageState extends State<TripDetailPage>
           int index = entry.key;
           Map<String, dynamic> item = entry.value;
           return _buildItineraryItem(item, index);
-        }).toList(),
+        }),
       ],
     );
   }
