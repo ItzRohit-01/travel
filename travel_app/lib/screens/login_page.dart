@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'signup_page.dart';
+import 'home_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -73,8 +75,12 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.green,
           ),
         );
+// Navigate to Home Page
+        Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => const HomePage()),
+);
 
-        // TODO: Navigate to Home Page
       }
     } catch (e) {
       if (mounted) {
