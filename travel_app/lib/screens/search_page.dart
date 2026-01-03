@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+<<<<<<< HEAD
+class SearchPage extends StatelessWidget {
+  const SearchPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Search')),
+      body: const Center(child: Text('Search placeholder')),
+=======
 import 'package:travel_app/models/trip_model.dart';
 import 'package:travel_app/services/auth_service.dart';
 import 'package:travel_app/services/trip_service.dart';
@@ -228,6 +238,7 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
+>>>>>>> a0ab94ee9a1738991159e92e8b03bf7dd86ad500
     );
   }
 }

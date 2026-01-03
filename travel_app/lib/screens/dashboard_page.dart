@@ -164,15 +164,15 @@ class _DashboardPageState extends State<DashboardPage> {
                             borderRadius: BorderRadius.circular(12),
                             gradient: LinearGradient(
                               colors: [
-                                Colors.blue.withOpacity(0.8),
-                                Colors.purple.withOpacity(0.8),
+                                Colors.blue.withValues(alpha: .8),
+                                Colors.purple.withValues(alpha: 0.8),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -510,7 +510,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Image.network(
                         city.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[200],
                           child: const Icon(Icons.location_city, color: Colors.grey),
                         ),
@@ -593,7 +593,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Image.network(
                         trip.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[200],
                           child: const Icon(Icons.photo, color: Colors.grey),
                         ),
