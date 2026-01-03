@@ -26,11 +26,11 @@ class ItineraryPage extends StatefulWidget {
   final DateTime tripEndDate;
 
   const ItineraryPage({
-    Key? key,
+    super.key,
     this.tripName = 'My Trip',
     required this.tripStartDate,
     required this.tripEndDate,
-  }) : super(key: key);
+  });
 
   @override
   State<ItineraryPage> createState() => _ItineraryPageState();

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:travel_app/models/trip_model.dart';
+import 'package:travel_app/services/auth_service.dart';
+import 'package:travel_app/services/trip_service.dart';
+
 class UserProfile {
   final String id;
   final String name;
@@ -13,11 +17,11 @@ class UserProfile {
   final List<String> favoriteDestinations;
 
   UserProfile({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.bio,
+    this.id = '',
+    this.name = '',
+    this.email = '',
+    this.phone = '',
+    this.bio = '',
     this.profileImage = '👤',
     this.totalTrips = 0,
     this.totalBudget = 0,
@@ -37,39 +41,100 @@ class TripCard {
   final String imageUrl;
 
   TripCard({
-    required this.id,
-    required this.name,
-    required this.destination,
-    required this.startDate,
-    required this.endDate,
-    required this.budget,
-    required this.status,
+    this.id = '',
+    this.name = '',
+    this.destination = '',
+    DateTime? startDate,
+    DateTime? endDate,
+    this.budget = 0,
+    this.status = '',
     this.emoji = '✈️',
     this.imageUrl = '',
-  });
+  })  : startDate = startDate ?? DateTime.now(),
+        endDate = endDate ?? DateTime.now();
 }
 
 class UserProfilePage extends StatefulWidget {
   final UserProfile? userProfile;
 
   const UserProfilePage({
-    Key? key,
+    super.key,
     this.userProfile,
-  }) : super(key: key);
+  });
 
   @override
   State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
+  final _authService = AuthService();
+  final _tripService = TripService();
+
   late UserProfile user;
   late List<TripCard> preplanedTrips;
   late List<TripCard> previousTrips;
+  bool _isLoadingStats = false;
+  String? _statsError;
 
   @override
   void initState() {
     super.initState();
     _initializeData();
+    _loadProfileStats();
+  }
+
+  Future<void> _loadProfileStats() async {
+    final authUser = _authService.currentUser;
+    if (authUser == null) {
+      return;
+    }
+
+    setState(() {
+      _isLoadingStats = true;
+      _statsError = null;
+    });
+
+    try {
+      final trips = await _tripService.fetchTrips(authUser.uid);
+      final totalTrips = trips.length;
+
+      // Backend trips currently do not include a budget field; keep 0 until added.
+      final summedBudget = 0.0;
+
+      final favorites = _topDestinations(trips, take: 3);
+
+      setState(() {
+        user = UserProfile(
+          id: authUser.uid,
+          name: user.name.isNotEmpty ? user.name : (authUser.displayName ?? ''),
+          email: user.email.isNotEmpty ? user.email : (authUser.email ?? ''),
+          phone: user.phone.isNotEmpty ? user.phone : (authUser.phoneNumber ?? ''),
+          bio: user.bio,
+          profileImage: user.profileImage,
+          totalTrips: totalTrips,
+          totalBudget: summedBudget,
+          favoriteDestinations: favorites,
+        );
+        _isLoadingStats = false;
+      });
+    } catch (e) {
+      setState(() {
+        _statsError = e.toString();
+        _isLoadingStats = false;
+      });
+    }
+  }
+
+  List<String> _topDestinations(List<Trip> trips, {int take = 3}) {
+    final counts = <String, int>{};
+    for (final t in trips) {
+      final key = t.destination.trim();
+      if (key.isEmpty) continue;
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    final sorted = counts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    return sorted.take(take).map((e) => e.key).toList();
   }
 
   void _initializeData() {
@@ -629,6 +694,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Widget _buildStatsSection() {
+    if (_isLoadingStats) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_statsError != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Stats unavailable', style: TextStyle(color: Colors.red[600])),
+          const SizedBox(height: 4),
+          Text(_statsError!, style: TextStyle(color: Colors.red[400], fontSize: 12)),
+        ],
+      );
+    }
+
     return Row(
       children: [
         Expanded(
@@ -642,7 +722,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
-            '\$${(user.totalBudget / 1000).toStringAsFixed(1)}K',
+            user.totalBudget > 0
+                ? '\$${(user.totalBudget / 1000).toStringAsFixed(1)}K'
+                : '—',
             'Total Budget',
             Icons.attach_money,
             const Color(0xFF6BCB77),
@@ -651,7 +733,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
-            '${user.favoriteDestinations.length}',
+            user.favoriteDestinations.isEmpty
+                ? '—'
+                : '${user.favoriteDestinations.length}',
             'Favorites',
             Icons.favorite,
             const Color(0xFFFF6B6B),
@@ -936,7 +1020,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 class TripDetailPage extends StatefulWidget {
   final TripCard trip;
 
-  const TripDetailPage({Key? key, required this.trip}) : super(key: key);
+  const TripDetailPage({super.key, required this.trip});
 
   @override
   State<TripDetailPage> createState() => _TripDetailPageState();
@@ -1332,7 +1416,7 @@ class _TripDetailPageState extends State<TripDetailPage>
           int index = entry.key;
           Map<String, dynamic> item = entry.value;
           return _buildItineraryItem(item, index);
-        }).toList(),
+        }),
       ],
     );
   }
