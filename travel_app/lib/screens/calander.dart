@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'package:travel_app/services/trip_service.dart';
+import 'package:travel_app/services/auth_service.dart';
 
 class TripEvent {
   final String id;
@@ -64,17 +65,20 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
+  final _tripService = TripService();
+  final _authService = AuthService();
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
 
-  DateTime _currentMonth = DateTime(2024, 1, 1);
+  DateTime _currentMonth = DateTime.now();
   String _sortBy = 'date';
   String _groupBy = 'month';
   String _filterBy = 'all';
 
   List<TripEvent> allEvents = [];
   List<TripEvent> filteredEvents = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -97,98 +101,72 @@ class _CalendarScreenState extends State<CalendarScreen>
     _fadeController.forward();
     _slideController.forward();
 
-    _initializeEvents();
-    filteredEvents = List.from(allEvents);
+    _loadTripsFromDatabase();
   }
 
-  void _initializeEvents() {
-    allEvents = [
-      TripEvent(
-        id: '1',
-        title: 'PARIS TRIP',
-        startDate: DateTime(2024, 1, 4),
-        endDate: DateTime(2024, 1, 5),
-        color: const Color(0xFF667EEA),
-        destination: 'Paris, France',
-        type: 'City Break',
-        imageUrl: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800',
-        price: 1250.00,
-        accommodation: 'Le Meurice Paris - 5 Star Hotel',
-        transportation: 'Air France Flight + Metro Pass',
-        activities: ['Eiffel Tower Visit', 'Louvre Museum Tour', 'Seine River Cruise', 'Montmartre Walking Tour'],
-        participants: ['You', 'Sarah Johnson', 'Mike Chen'],
-        bookingStatus: 'Confirmed',
-        description: 'Experience the magic of Paris with visits to iconic landmarks, world-class museums, and charming neighborhoods. Enjoy authentic French cuisine and immerse yourself in the city\'s rich culture.',
-      ),
-      TripEvent(
-        id: '2',
-        title: 'PARIS',
-        startDate: DateTime(2024, 1, 9),
-        endDate: DateTime(2024, 1, 11),
-        color: const Color(0xFFFF6B6B),
-        destination: 'Paris, France',
-        type: 'City Break',
-        imageUrl: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=800',
-        price: 890.00,
-        accommodation: 'Hotel Plaza Athénée',
-        transportation: 'Train + Taxi',
-        activities: ['Versailles Palace', 'Notre-Dame Cathedral', 'Champs-Élysées Shopping', 'French Cooking Class'],
-        participants: ['You', 'Emma Wilson'],
-        bookingStatus: 'Confirmed',
-        description: 'A romantic Parisian getaway featuring palace tours, gourmet dining, and shopping along the famous Champs-Élysées.',
-      ),
-      TripEvent(
-        id: '3',
-        title: 'NYC - GETAWAY',
-        startDate: DateTime(2024, 1, 15),
-        endDate: DateTime(2024, 1, 22),
-        color: const Color(0xFFFFD93D),
-        destination: 'New York, USA',
-        type: 'City Break',
-        imageUrl: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800',
-        price: 2100.00,
-        accommodation: 'The Plaza Hotel Manhattan',
-        transportation: 'Delta Airlines + NYC Subway Pass',
-        activities: ['Statue of Liberty Tour', 'Broadway Show', 'Central Park Bike Tour', 'Times Square Experience', 'Brooklyn Bridge Walk', 'MoMA Visit', 'Top of the Rock'],
-        participants: ['You', 'John Smith', 'Lisa Anderson', 'David Kim'],
-        bookingStatus: 'Confirmed',
-        description: 'The ultimate New York experience! Explore Manhattan\'s iconic landmarks, catch a Broadway show, and discover the city that never sleeps.',
-      ),
-      TripEvent(
-        id: '4',
-        title: 'JAPAN ADVENTURE',
-        startDate: DateTime(2024, 1, 16),
-        endDate: DateTime(2024, 1, 17),
-        color: const Color(0xFF4ECDC4),
-        destination: 'Tokyo, Japan',
-        type: 'Adventure',
-        imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800',
-        price: 1800.00,
-        accommodation: 'Park Hyatt Tokyo',
-        transportation: 'JAL Flight + JR Pass',
-        activities: ['Mount Fuji Day Trip', 'Senso-ji Temple', 'Shibuya Crossing', 'Sushi Making Class', 'Akihabara Tech Tour'],
-        participants: ['You', 'Amy Tanaka'],
-        bookingStatus: 'Pending',
-        description: 'Discover the perfect blend of ancient traditions and modern innovation in Tokyo. From temples to tech districts, experience the heart of Japan.',
-      ),
-      TripEvent(
-        id: '5',
-        title: 'NYC GETAWAY',
-        startDate: DateTime(2024, 1, 23),
-        endDate: DateTime(2024, 1, 23),
-        color: const Color(0xFFB565D8),
-        destination: 'New York, USA',
-        type: 'City Break',
-        imageUrl: 'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=800',
-        price: 450.00,
-        accommodation: 'Marriott Marquis',
-        transportation: 'Amtrak Train',
-        activities: ['Empire State Building', '9/11 Memorial', 'High Line Walk'],
-        participants: ['You'],
-        bookingStatus: 'Confirmed',
-        description: 'A quick day trip to experience New York\'s most famous landmarks and memorials.',
-      ),
-    ];
+  Future<void> _loadTripsFromDatabase() async {
+    final userId = _authService.currentUser?.uid;
+    if (userId == null) {
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    try {
+      final trips = await _tripService.fetchTrips(userId);
+      
+      setState(() {
+        allEvents = trips.map((trip) => TripEvent(
+          id: trip.id,
+          title: trip.title.toUpperCase(),
+          startDate: trip.startDate,
+          endDate: trip.endDate,
+          color: _getColorForTrip(trip.status),
+          destination: trip.destination,
+          type: _getTripType(trip.status),
+          imageUrl: trip.imageUrl,
+          price: 0.0,
+          accommodation: '',
+          transportation: '',
+          activities: [],
+          participants: ['You'],
+          bookingStatus: trip.status.isNotEmpty 
+            ? trip.status[0].toUpperCase() + trip.status.substring(1) 
+            : 'Planned',
+          description: trip.title,
+        )).toList();
+        
+        filteredEvents = List.from(allEvents);
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Color _getColorForTrip(String status) {
+    switch (status.toLowerCase()) {
+      case 'ongoing':
+        return const Color(0xFF4ECDC4);
+      case 'completed':
+        return const Color(0xFF6BCB77);
+      case 'upcoming':
+      case 'planned':
+      default:
+        return const Color(0xFF667EEA);
+    }
+  }
+
+  String _getTripType(String status) {
+    switch (status.toLowerCase()) {
+      case 'ongoing':
+        return 'Ongoing';
+      case 'completed':
+        return 'Past Trip';
+      case 'upcoming':
+        return 'Upcoming';
+      default:
+        return 'Planned';
+    }
   }
 
   void _performSearch() {
@@ -249,8 +227,6 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   List<DateTime> _getDaysInMonth() {
     final firstDayOfMonth = DateTime(_currentMonth.year, _currentMonth.month, 1);
-    final lastDayOfMonth =
-        DateTime(_currentMonth.year, _currentMonth.month + 1, 0);
 
     // Get the first day to display (might be from previous month)
     int firstWeekday = firstDayOfMonth.weekday % 7; // Convert to 0-6 (Sun-Sat)
@@ -283,6 +259,20 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF8F9FF),
+        appBar: AppBar(
+          title: const Text('Calendar View'),
+          backgroundColor: const Color(0xFF667EEA),
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FF),
       floatingActionButton: FloatingActionButton.extended(

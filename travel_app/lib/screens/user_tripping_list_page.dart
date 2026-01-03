@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:travel_app/models/trip_model.dart';
 import 'package:travel_app/services/auth_service.dart';
 import 'package:travel_app/services/trip_service.dart';
+import 'itenary_view_screen.dart';
+import 'itenary_page.dart';
 
 class UserTripListingPage extends StatefulWidget {
   const UserTripListingPage({super.key});
@@ -391,7 +393,19 @@ class _UserTripListingPageState extends State<UserTripListingPage> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => _showTripDetails(trip),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItineraryViewScreen(
+                  destination: trip.destination,
+                  startDate: DateFormat('MMM dd, yyyy').format(trip.startDate),
+                  endDate: DateFormat('MMM dd, yyyy').format(trip.endDate),
+                ),
+              ),
+            );
+          },
+          onLongPress: () => _showTripDetails(trip),
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -585,10 +599,14 @@ class _UserTripListingPageState extends State<UserTripListingPage> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Opening ${trip.title} itinerary...'),
-                  backgroundColor: const Color(0xFF667EEA),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ItineraryViewScreen(
+                    destination: trip.destination,
+                    startDate: DateFormat('MMM dd, yyyy').format(trip.startDate),
+                    endDate: DateFormat('MMM dd, yyyy').format(trip.endDate),
+                  ),
                 ),
               );
             },
@@ -597,6 +615,29 @@ class _UserTripListingPageState extends State<UserTripListingPage> {
             ),
             child: const Text(
               'View Itinerary',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ItineraryPage(
+                    tripName: trip.title,
+                    tripStartDate: trip.startDate,
+                    tripEndDate: trip.endDate,
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF764BA2),
+            ),
+            icon: const Icon(Icons.edit, color: Colors.white, size: 16),
+            label: const Text(
+              'Edit',
               style: TextStyle(color: Colors.white),
             ),
           ),

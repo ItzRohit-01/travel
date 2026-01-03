@@ -6,7 +6,13 @@ import 'plan_trip_page.dart';
 import 'user_profile_pages.dart';
 import 'search_page.dart';
 import 'user_tripping_list_page.dart' show UserTripListingPage;
+<<<<<<< HEAD
 import 'chatbot.dart';
+=======
+import 'itenary_page.dart';
+import 'calander.dart';
+import 'community.dart';
+>>>>>>> ece51ad5cd4b7ca2584dab937c8991dda8135681
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -106,7 +112,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('YATRA',
+        title: const Text('GlobalTrotter',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 30,
@@ -121,7 +127,32 @@ class _DashboardPageState extends State<DashboardPage> {
         foregroundColor: Colors.black,
         actions: [
           IconButton(
+            icon: const Icon(Icons.calendar_today),
+            tooltip: 'Calendar View',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CalendarScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.people),
+            tooltip: 'Community',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CommunityScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
             onPressed: _logout,
           ),
         ],
@@ -146,15 +177,15 @@ class _DashboardPageState extends State<DashboardPage> {
                             borderRadius: BorderRadius.circular(12),
                             gradient: LinearGradient(
                               colors: [
-                                Colors.blue.withOpacity(0.8),
-                                Colors.purple.withOpacity(0.8),
+                                Colors.blue.withValues(alpha: .8),
+                                Colors.purple.withValues(alpha: 0.8),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -497,7 +528,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Image.network(
                         city.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[200],
                           child: const Icon(Icons.location_city, color: Colors.grey),
                         ),
@@ -554,8 +585,15 @@ class _DashboardPageState extends State<DashboardPage> {
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${trip.title} trip selected')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItineraryPage(
+                  tripName: trip.title,
+                  tripStartDate: trip.startDate,
+                  tripEndDate: trip.endDate,
+                ),
+              ),
             );
           },
           borderRadius: BorderRadius.circular(8),
@@ -573,7 +611,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Image.network(
                         trip.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[200],
                           child: const Icon(Icons.photo, color: Colors.grey),
                         ),

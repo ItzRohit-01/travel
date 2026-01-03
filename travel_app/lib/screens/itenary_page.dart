@@ -469,7 +469,7 @@ class _ItineraryPageState extends State<ItineraryPage>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: cardColor.withOpacity(0.15),
+            color: cardColor.withValues(alpha: 0.15),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -492,7 +492,7 @@ class _ItineraryPageState extends State<ItineraryPage>
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: cardColor.withOpacity(0.1),
+                      color: cardColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -518,7 +518,7 @@ class _ItineraryPageState extends State<ItineraryPage>
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: IconButton(
@@ -540,7 +540,7 @@ class _ItineraryPageState extends State<ItineraryPage>
                 color: const Color(0xFFF8F9FF),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: cardColor.withOpacity(0.2),
+                  color: cardColor.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -608,7 +608,7 @@ class _ItineraryPageState extends State<ItineraryPage>
           color: const Color(0xFFF8F9FF),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             width: 1.5,
           ),
         ),
@@ -657,7 +657,7 @@ class _ItineraryPageState extends State<ItineraryPage>
           color: const Color(0xFFF8F9FF),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             width: 1.5,
           ),
         ),
@@ -737,13 +737,23 @@ class _ItineraryPageState extends State<ItineraryPage>
           ],
         ),
         actions: [
-          ElevatedButton(
+          TextButton(
             onPressed: () => Navigator.pop(context),
+            child: const Text('Keep Editing'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/dashboard',
+                (route) => false,
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF667EEA),
             ),
             child: const Text(
-              'Done',
+              'Go to Dashboard',
               style: TextStyle(color: Colors.white),
             ),
           ),
