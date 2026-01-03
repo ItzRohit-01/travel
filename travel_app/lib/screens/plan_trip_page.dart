@@ -14,6 +14,46 @@ class _PlanTripPageState extends State<PlanTripPage> {
   DateTime? _startDate;
   DateTime? _endDate;
 
+  int _currentIndex = 1;
+
+Widget _buildBottomNav() {
+  return BottomNavigationBar(
+    currentIndex: _currentIndex,
+     backgroundColor: const Color.fromARGB(255, 0, 0, 0),          // 👈 force background
+  selectedItemColor: Colors.blue,          // 👈 active icon
+  unselectedItemColor: Colors.grey[600],   // 👈 inactive icons
+  type: BottomNavigationBarType.fixed, 
+    onTap: (index) {
+      setState(() {
+        _currentIndex = index;
+      });
+
+      // Example navigation logic
+      if (index == 0) {
+        Navigator.pop(context); // Home
+      } else if (index == 2) {
+        // Profile page later
+      }
+    },
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.add_location_alt),
+        
+        label: 'Plan',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ],
+  );
+}
+
+
   // Popular destinations
   final List<String> destinations = [
     'Paris, France',
@@ -307,7 +347,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
                           ),
                           borderRadius: BorderRadius.circular(8),
                           color: isSelected
-                              ? Colors.blue.withOpacity(0.1)
+                              ? Colors.blue.withValues(alpha:0.1)
                               : Colors.transparent,
                         ),
                         child: Material(
@@ -371,6 +411,7 @@ class _PlanTripPageState extends State<PlanTripPage> {
           ),
         ),
       ),
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 }

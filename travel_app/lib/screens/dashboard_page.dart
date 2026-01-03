@@ -22,7 +22,7 @@ class _DashboardPageState extends State<DashboardPage> {
       title: 'Paris Adventure',
       destination: 'Paris, France',
       startDate: DateTime.now().subtract(const Duration(days: 30)),
-      endDate: DateTime.now().subtract(const Duration(days: 23)),
+      endDate: DateTime.now().subtract  (const Duration(days: 23)),
       image: '🗼',
       status: 'Completed',
     ),
@@ -102,8 +102,16 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Travel App'),
-        centerTitle: true,
+        title: const Text('YATRA',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 30,
+          fontStyle: FontStyle.italic,
+          letterSpacing: 2,
+          color: Color.fromARGB(255, 0, 88, 159)),
+        ),
+        centerTitle: false,
+        
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -120,58 +128,71 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             // Banner Image Section
             Container(
-              width: double.infinity,
-              height: 180,
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.blue.withOpacity(0.8),
-                    Colors.purple.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Text(
-                      'Banner Image',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+  width: double.infinity,
+  height: 180,
+  margin: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.08),
+        blurRadius: 12,
+        offset: const Offset(0, 4),
+      ),
+    ],
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(12),
+    child: Stack(
+      fit: StackFit.expand,
+      children: [
+        // 🖼️ Background Image
+        Image.asset(
+          'assets/images/banner.jpg',
+          fit: BoxFit.cover,
+        ),
+ 
+        // 🌟 Content (unchanged)
+        Stack(
+          children: [
+            Center(
+              child: Text(
+                'Plan your next journey',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      shadows: const [
+                        Shadow(
+                          color: Colors.black45,
+                          blurRadius: 8,
+                        ),
+                      ],
                     ),
-                  ),
-                  // Decorative elements
-                  Positioned(
-                    top: 10,
-                    right: 20,
-                    child: Text(
-                      '✈️',
-                      style: TextStyle(fontSize: 32),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    left: 20,
-                    child: Text(
-                      '🌍',
-                      style: TextStyle(fontSize: 32),
-                    ),
-                  ),
-                ],
               ),
             ),
+            // const Positioned(
+            //   top: 10,
+            //   right: 20,
+            //   child: Text(
+            //     '✈️',
+            //     style: TextStyle(fontSize: 32),
+            //   ),
+            // ),
+            // const Positioned(
+            //   bottom: 10,
+            //   left: 20,
+            //   child: Text(
+            //     '🌍',
+            //     style: TextStyle(fontSize: 32),
+            //   ),
+            // ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
+
 
             // Search Bar
             Padding(
@@ -282,7 +303,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   Text(
                     'Previous Trips',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                       fontSize: 18,
+    fontWeight: FontWeight.w700,
+                          
                         ),
                   ),
                   const SizedBox(height: 12),
@@ -334,6 +357,10 @@ class _DashboardPageState extends State<DashboardPage> {
             _selectedIndex = index;
           });
         },
+          backgroundColor: Colors.white,
+  selectedItemColor: Colors.blue,        // active icon color
+  unselectedItemColor: Colors.grey,      // inactive icon color
+  type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
