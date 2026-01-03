@@ -21,11 +21,44 @@ class _DashboardPageState extends State<DashboardPage> {
   bool _isLoading = true;
   String? _errorMessage;
 
+<<<<<<< HEAD
   @override
   void initState() {
     super.initState();
     _loadData();
   }
+=======
+  // Sample data for previous trips
+  final List<Trip> previousTrips = [
+    Trip(
+      id: '1',
+      title: 'Paris Adventure',
+      destination: 'Paris, France',
+      startDate: DateTime.now().subtract(const Duration(days: 30)),
+      endDate: DateTime.now().subtract  (const Duration(days: 23)),
+      image: '🗼',
+      status: 'Completed',
+    ),
+    Trip(
+      id: '2',
+      title: 'Tokyo Exploration',
+      destination: 'Tokyo, Japan',
+      startDate: DateTime.now().subtract(const Duration(days: 60)),
+      endDate: DateTime.now().subtract(const Duration(days: 45)),
+      image: '🗾',
+      status: 'Completed',
+    ),
+    Trip(
+      id: '3',
+      title: 'Barcelona Beach',
+      destination: 'Barcelona, Spain',
+      startDate: DateTime.now().subtract(const Duration(days: 90)),
+      endDate: DateTime.now().subtract(const Duration(days: 80)),
+      image: '🏖️',
+      status: 'Completed',
+    ),
+  ];
+>>>>>>> ac9f9b3b0a7930cbba6ab33a5854d306923cae04
 
   Future<void> _loadData() async {
     final userId = _authService.currentUser?.uid;
@@ -94,8 +127,16 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Travel App'),
-        centerTitle: true,
+        title: const Text('YATRA',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 30,
+          fontStyle: FontStyle.italic,
+          letterSpacing: 2,
+          color: Color.fromARGB(255, 0, 88, 159)),
+        ),
+        centerTitle: false,
+        
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -106,6 +147,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
+<<<<<<< HEAD
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
@@ -171,6 +213,79 @@ class _DashboardPageState extends State<DashboardPage> {
                             ],
                           ),
                         ),
+=======
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Banner Image Section
+            Container(
+  width: double.infinity,
+  height: 180,
+  margin: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.08),
+        blurRadius: 12,
+        offset: const Offset(0, 4),
+      ),
+    ],
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(12),
+    child: Stack(
+      fit: StackFit.expand,
+      children: [
+        // 🖼️ Background Image
+        Image.asset(
+          'assets/images/banner.jpg',
+          fit: BoxFit.cover,
+        ),
+ 
+        // 🌟 Content (unchanged)
+        Stack(
+          children: [
+            Center(
+              child: Text(
+                'Plan your next journey',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      shadows: const [
+                        Shadow(
+                          color: Colors.black45,
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+              ),
+            ),
+            // const Positioned(
+            //   top: 10,
+            //   right: 20,
+            //   child: Text(
+            //     '✈️',
+            //     style: TextStyle(fontSize: 32),
+            //   ),
+            // ),
+            // const Positioned(
+            //   bottom: 10,
+            //   left: 20,
+            //   child: Text(
+            //     '🌍',
+            //     style: TextStyle(fontSize: 32),
+            //   ),
+            // ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
+
+>>>>>>> ac9f9b3b0a7930cbba6ab33a5854d306923cae04
 
                         // Search Bar
                         Padding(
@@ -334,6 +449,152 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
+<<<<<<< HEAD
+=======
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Filter, Group, Sort buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Group by clicked')),
+                        );
+                      },
+                      icon: const Icon(Icons.category, size: 18),
+                      label: const Text('Group by'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Filter clicked')),
+                        );
+                      },
+                      icon: const Icon(Icons.tune, size: 18),
+                      label: const Text('Filter'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Sort by clicked')),
+                        );
+                      },
+                      icon: const Icon(Icons.sort, size: 18),
+                      label: const Text('Sort by...'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Top Regional Selections
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Top Regional Selections',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: topRegionalSelections.length,
+                      itemBuilder: (context, index) {
+                        final city = topRegionalSelections[index];
+                        return _buildRegionalSelectionCard(city);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Previous Trips
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Previous Trips',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                       fontSize: 18,
+    fontWeight: FontWeight.w700,
+                          
+                        ),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 180,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: previousTrips.length,
+                      itemBuilder: (context, index) {
+                        final trip = previousTrips[index];
+                        return _buildPreviousTripCard(trip);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Plan a Trip Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PlanTripPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Plan a trip'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+>>>>>>> ac9f9b3b0a7930cbba6ab33a5854d306923cae04
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
@@ -341,6 +602,10 @@ class _DashboardPageState extends State<DashboardPage> {
             _selectedIndex = index;
           });
         },
+          backgroundColor: Colors.white,
+  selectedItemColor: Colors.blue,        // active icon color
+  unselectedItemColor: Colors.grey,      // inactive icon color
+  type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
