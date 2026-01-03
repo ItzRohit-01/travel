@@ -506,6 +506,7 @@ class _DashboardPageState extends State<DashboardPage> {
         icon: const Icon(Icons.chat_bubble_outline),
         label: const Text('Travel Assistant'),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
