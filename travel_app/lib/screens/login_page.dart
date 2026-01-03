@@ -14,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
+
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
@@ -24,12 +25,16 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  // ---------------- VALIDATORS ----------------
+
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
-    // Basic email validation
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+    final emailRegex =
+        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
     if (!emailRegex.hasMatch(value)) {
       return 'Please enter a valid email address';
     }
@@ -46,41 +51,54 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  Future<void> _handleLogin() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+  // ---------------- LOGIN ----------------
 
-      try {
-        await _authService.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _authService.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login successful!'),
+            backgroundColor: Colors.green,
+          ),
         );
 
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Login successful!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          // TODO: Navigate to home page
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      } finally {
-        if (mounted) {
-          setState(() {async {
+        // TODO: Navigate to Home Page
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  // ---------------- FORGOT PASSWORD ----------------
+
+  Future<void> _handleForgotPassword() async {
     final email = _emailController.text.trim();
-    
+
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -93,10 +111,13 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await _authService.sendPasswordResetEmail(email);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Password reset email sent! Check your inbox.'),
+            content: Text(
+              'Password reset email sent! Check your inbox.',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -110,23 +131,24 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       }
-    }}
     }
   }
 
+  // ---------------- SIGNUP ----------------
+
   void _navigateToSignup() {
+<<<<<<< HEAD
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SignupPage()),
+=======
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Navigate to Signup page')),
+>>>>>>> a5a42e28743bdb5a02e7002ff18fcd2bdece8e40
     );
   }
 
-  void _handleForgotPassword() {
-    // TODO: Navigate to forgot password page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Forgot Password clicked')),
-    );
-  }
+  // ---------------- UI ----------------
 
   @override
   Widget build(BuildContext context) {
@@ -134,14 +156,12 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // App Logo/Icon
                   Icon(
                     Icons.flight_takeoff,
                     size: 80,
@@ -149,55 +169,44 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Title
                   Text(
                     'Travel App',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
 
-                  // Subtitle
                   Text(
                     'Login to your account',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: TextStyle(color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 48),
 
-                  // Email Field
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: _validateEmail,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      hintText: 'Enter your email',
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
-                  // Password Field
                   TextFormField(
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     validator: _validatePassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      hintText: 'Enter your password',
-                      prefixIcon: const Icon(Icons.lock_outlined),
+                      prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
@@ -206,46 +215,35 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: () {
                           setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
+                            _isPasswordVisible =
+                                !_isPasswordVisible;
                           });
                         },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
                     ),
                   ),
-                  const SizedBox(height: 8),
 
-                  // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _handleForgotPassword,
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
+                      child: const Text('Forgot Password?'),
                     ),
                   ),
                   const SizedBox(height: 24),
 
-                  // Login Button
                   ElevatedButton(
-                    onPressed: _isLoading ? null : _handleLogin,
+                    onPressed:
+                        _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
                     ),
                     child: _isLoading
                         ? const SizedBox(
@@ -253,8 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              color: Colors.white,
                             ),
                           )
                         : const Text(
@@ -267,7 +264,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Signup Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -277,12 +273,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextButton(
                         onPressed: _navigateToSignup,
-                        child: Text(
+                        child: const Text(
                           'Sign Up',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
