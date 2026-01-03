@@ -491,6 +491,20 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ChatBotScreen(),
+            ),
+          );
+        },
+        backgroundColor: const Color(0xFF667EEA),
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.chat_bubble_outline),
+        label: const Text('Travel Assistant'),
+      ),
     );
   }
 

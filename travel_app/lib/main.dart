@@ -10,6 +10,7 @@ import 'screens/user_tripping_list_page.dart';
 import 'screens/user_profile_pages.dart';
 import 'screens/calander.dart';
 import 'screens/community.dart';
+import 'screens/chatbot_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const UserProfilePage(),
         '/calendar': (context) => const CalendarScreen(),
         '/community': (context) => const CommunityScreen(),
+        '/chatbot': (context) => const ChatBotScreen(),
         '/itinerary-view': (context) => const ItineraryViewScreen(),
       },
       home: const LoginPage(),
