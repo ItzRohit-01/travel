@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/trip_model.dart';
 import 'plan_trip_page.dart';
+import 'user_profile_pages.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -353,6 +354,16 @@ class _DashboardPageState extends State<DashboardPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
+          if (index == 3) {
+            // Navigate to profile page when Profile tab is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserProfilePage(),
+              ),
+            );
+            return;
+          }
           setState(() {
             _selectedIndex = index;
           });
