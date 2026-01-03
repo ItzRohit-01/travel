@@ -71,9 +71,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
   final _tripService = TripService();
 
   late UserProfile user;
-  late List<TripCard> preplanedTrips;
-  late List<TripCard> previousTrips;
+  List<TripCard> preplanedTrips = [];
+  List<TripCard> previousTrips = [];
   bool _isLoadingStats = false;
+  bool _isLoadingTrips = true;
   String? _statsError;
 
   @override
@@ -81,6 +82,81 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.initState();
     _initializeData();
     _loadProfileStats();
+    _loadTripsFromDatabase();
+  }
+
+  Future<void> _loadTripsFromDatabase() async {
+    final userId = _authService.currentUser?.uid;
+    if (userId == null) {
+      setState(() => _isLoadingTrips = false);
+      return;
+    }
+
+    try {
+      final trips = await _tripService.fetchTrips(userId);
+      
+      setState(() {
+        // Separate trips by status
+        final now = DateTime.now();
+        
+        preplanedTrips = trips
+            .where((trip) => 
+                trip.startDate.isAfter(now) || 
+                trip.status.toLowerCase() == 'upcoming' ||
+                trip.status.toLowerCase() == 'planned')
+            .map((trip) => TripCard(
+              id: trip.id,
+              name: trip.title,
+              destination: trip.destination,
+              startDate: trip.startDate,
+              endDate: trip.endDate,
+              budget: 0,
+              status: trip.status.isNotEmpty ? trip.status : 'upcoming',
+              emoji: _getEmojiForDestination(trip.destination),
+              imageUrl: trip.imageUrl,
+            ))
+            .toList();
+        
+        previousTrips = trips
+            .where((trip) => 
+                trip.endDate.isBefore(now) || 
+                trip.status.toLowerCase() == 'completed')
+            .map((trip) => TripCard(
+              id: trip.id,
+              name: trip.title,
+              destination: trip.destination,
+              startDate: trip.startDate,
+              endDate: trip.endDate,
+              budget: 0,
+              status: 'completed',
+              emoji: _getEmojiForDestination(trip.destination),
+              imageUrl: trip.imageUrl,
+            ))
+            .toList();
+        
+        _isLoadingTrips = false;
+      });
+    } catch (e) {
+      setState(() => _isLoadingTrips = false);
+    }
+  }
+
+  String _getEmojiForDestination(String destination) {
+    final lower = destination.toLowerCase();
+    if (lower.contains('paris')) return '🗼';
+    if (lower.contains('tokyo') || lower.contains('japan')) return '🗾';
+    if (lower.contains('dubai')) return '🏙️';
+    if (lower.contains('rome') || lower.contains('italy')) return '🏛️';
+    if (lower.contains('iceland')) return '🏔️';
+    if (lower.contains('sydney') || lower.contains('australia')) return '🦘';
+    if (lower.contains('amsterdam')) return '🚲';
+    if (lower.contains('egypt') || lower.contains('cairo')) return '🐪';
+    if (lower.contains('new york')) return '🗽';
+    if (lower.contains('bali') || lower.contains('indonesia')) return '🏝️';
+    if (lower.contains('barcelona') || lower.contains('spain')) return '🏖️';
+    if (lower.contains('london') || lower.contains('uk')) return '🇬🇧';
+    if (lower.contains('bangkok') || lower.contains('thailand')) return '🍜';
+    return '✈️';
   }
 
   Future<void> _loadProfileStats() async {
@@ -140,219 +216,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
   void _initializeData() {
     user = widget.userProfile ??
         UserProfile(
-          id: '1',
-          name: 'Sarah Anderson',
-          email: 'sarah.anderson@email.com',
-          phone: '+1 (555) 123-4567',
+          id: _authService.currentUser?.uid ?? '1',
+          name: _authService.currentUser?.displayName ?? 'User',
+          email: _authService.currentUser?.email ?? 'user@email.com',
+          phone: _authService.currentUser?.phoneNumber ?? '',
           bio: 'Adventure seeker | Travel enthusiast | Photographer | Always exploring new cultures and destinations',
-          totalTrips: 18,
-          totalBudget: 68500,
-          favoriteDestinations: ['Paris', 'Tokyo', 'Barcelona', 'Rome', 'Sydney', 'Iceland'],
+          totalTrips: 0,
+          totalBudget: 0,
+          favoriteDestinations: [],
         );
 
-    preplanedTrips = [
-      TripCard(
-        id: '1',
-        name: 'Paris City Break',
-        destination: 'Paris, France',
-        startDate: DateTime(2026, 3, 15),
-        endDate: DateTime(2026, 3, 22),
-        budget: 1500,
-        status: 'upcoming',
-        emoji: '🗼',
-        imageUrl: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=400',
-      ),
-      TripCard(
-        id: '2',
-        name: 'Tokyo Adventure',
-        destination: 'Tokyo, Japan',
-        startDate: DateTime(2026, 4, 10),
-        endDate: DateTime(2026, 4, 25),
-        budget: 2500,
-        status: 'upcoming',
-        emoji: '🗾',
-        imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
-      ),
-      TripCard(
-        id: '3',
-        name: 'Dubai Luxury',
-        destination: 'Dubai, UAE',
-        startDate: DateTime(2026, 5, 1),
-        endDate: DateTime(2026, 5, 8),
-        budget: 3000,
-        status: 'upcoming',
-        emoji: '🏙️',
-        imageUrl: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400',
-      ),
-      TripCard(
-        id: '7',
-        name: 'Rome History Tour',
-        destination: 'Rome, Italy',
-        startDate: DateTime(2026, 6, 5),
-        endDate: DateTime(2026, 6, 14),
-        budget: 1800,
-        status: 'upcoming',
-        emoji: '🏛️',
-        imageUrl: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400',
-      ),
-      TripCard(
-        id: '8',
-        name: 'Iceland Adventure',
-        destination: 'Reykjavik, Iceland',
-        startDate: DateTime(2026, 7, 1),
-        endDate: DateTime(2026, 7, 10),
-        budget: 2200,
-        status: 'upcoming',
-        emoji: '🏔️',
-        imageUrl: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=400',
-      ),
-      TripCard(
-        id: '9',
-        name: 'Sydney Coastal',
-        destination: 'Sydney, Australia',
-        startDate: DateTime(2026, 8, 15),
-        endDate: DateTime(2026, 8, 28),
-        budget: 3500,
-        status: 'upcoming',
-        emoji: '🦘',
-        imageUrl: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=400',
-      ),
-      TripCard(
-        id: '10',
-        name: 'Amsterdam Culture',
-        destination: 'Amsterdam, Netherlands',
-        startDate: DateTime(2026, 9, 5),
-        endDate: DateTime(2026, 9, 12),
-        budget: 1400,
-        status: 'upcoming',
-        emoji: '🚲',
-        imageUrl: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400',
-      ),
-      TripCard(
-        id: '11',
-        name: 'Cairo Pyramids',
-        destination: 'Cairo, Egypt',
-        startDate: DateTime(2026, 10, 1),
-        endDate: DateTime(2026, 10, 9),
-        budget: 1600,
-        status: 'upcoming',
-        emoji: '🐪',
-        imageUrl: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=400',
-      ),
-    ];
-
-    previousTrips = [
-      TripCard(
-        id: '4',
-        name: 'New York Adventure',
-        destination: 'New York, USA',
-        startDate: DateTime(2025, 11, 1),
-        endDate: DateTime(2025, 11, 8),
-        budget: 1800,
-        status: 'completed',
-        emoji: '🗽',
-        imageUrl: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400',
-      ),
-      TripCard(
-        id: '5',
-        name: 'Bali Relaxation',
-        destination: 'Bali, Indonesia',
-        startDate: DateTime(2025, 10, 5),
-        endDate: DateTime(2025, 10, 15),
-        budget: 900,
-        status: 'completed',
-        emoji: '🏝️',
-        imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400',
-      ),
-      TripCard(
-        id: '6',
-        name: 'Barcelona Beach',
-        destination: 'Barcelona, Spain',
-        startDate: DateTime(2025, 9, 10),
-        endDate: DateTime(2025, 9, 18),
-        budget: 1200,
-        status: 'completed',
-        emoji: '🏖️',
-        imageUrl: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=400',
-      ),
-      TripCard(
-        id: '12',
-        name: 'London Cultural',
-        destination: 'London, UK',
-        startDate: DateTime(2025, 8, 5),
-        endDate: DateTime(2025, 8, 12),
-        budget: 1700,
-        status: 'completed',
-        emoji: '🇬🇧',
-        imageUrl: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400',
-      ),
-      TripCard(
-        id: '13',
-        name: 'Bangkok Street Food',
-        destination: 'Bangkok, Thailand',
-        startDate: DateTime(2025, 7, 1),
-        endDate: DateTime(2025, 7, 10),
-        budget: 800,
-        status: 'completed',
-        emoji: '🍜',
-        imageUrl: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400',
-      ),
-      TripCard(
-        id: '14',
-        name: 'Singapore Modern',
-        destination: 'Singapore',
-        startDate: DateTime(2025, 6, 10),
-        endDate: DateTime(2025, 6, 17),
-        budget: 2000,
-        status: 'completed',
-        emoji: '🏙️',
-        imageUrl: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400',
-      ),
-      TripCard(
-        id: '15',
-        name: 'Santorini Sunset',
-        destination: 'Santorini, Greece',
-        startDate: DateTime(2025, 5, 15),
-        endDate: DateTime(2025, 5, 23),
-        budget: 1900,
-        status: 'completed',
-        emoji: '🇬🇷',
-        imageUrl: 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400',
-      ),
-      TripCard(
-        id: '16',
-        name: 'Swiss Alps',
-        destination: 'Zurich, Switzerland',
-        startDate: DateTime(2025, 4, 5),
-        endDate: DateTime(2025, 4, 14),
-        budget: 2800,
-        status: 'completed',
-        emoji: '⛷️',
-        imageUrl: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400',
-      ),
-      TripCard(
-        id: '17',
-        name: 'Maldives Honeymoon',
-        destination: 'Maldives',
-        startDate: DateTime(2025, 3, 1),
-        endDate: DateTime(2025, 3, 12),
-        budget: 4500,
-        status: 'completed',
-        emoji: '🌺',
-        imageUrl: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400',
-      ),
-      TripCard(
-        id: '18',
-        name: 'Morocco Desert',
-        destination: 'Marrakech, Morocco',
-        startDate: DateTime(2025, 2, 10),
-        endDate: DateTime(2025, 2, 18),
-        budget: 1300,
-        status: 'completed',
-        emoji: '🕌',
-        imageUrl: 'https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=400',
-      ),
-    ];
+    // Trips will be loaded from database in _loadTripsFromDatabase()
   }
 
   void _editProfile() {
@@ -493,17 +367,26 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   const SizedBox(height: 32),
 
                   // Preplanned Trips
-                  _buildTripsSection(
-                    'Preplanned Trips',
-                    preplanedTrips,
-                  ),
-                  const SizedBox(height: 32),
+                  if (_isLoadingTrips)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(40.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  else ...[
+                    _buildTripsSection(
+                      'Preplanned Trips',
+                      preplanedTrips,
+                    ),
+                    const SizedBox(height: 32),
 
-                  // Previous Trips
-                  _buildTripsSection(
-                    'Previous Trips',
-                    previousTrips,
-                  ),
+                    // Previous Trips
+                    _buildTripsSection(
+                      'Previous Trips',
+                      previousTrips,
+                    ),
+                  ],
                   const SizedBox(height: 20),
                 ],
               ),

@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/login_page.dart';
+import 'screens/signup_page.dart';
+import 'screens/dashboard_page.dart';
+import 'screens/plan_trip_page.dart';
+import 'screens/itenary_view_screen.dart';
+import 'screens/search_page.dart';
+import 'screens/user_tripping_list_page.dart';
+import 'screens/user_profile_pages.dart';
+import 'screens/calander.dart';
+import 'screens/community.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,12 +26,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Travel App',
+      title: 'YATRA - Travel Planner',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          centerTitle: true,
+        ),
       ),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignupPage(),
+        '/dashboard': (context) => const DashboardPage(),
+        '/plan-trip': (context) => const PlanTripPage(),
+        '/search': (context) => const SearchPage(),
+        '/my-trips': (context) => const UserTripListingPage(),
+        '/profile': (context) => const UserProfilePage(),
+        '/calendar': (context) => const CalendarScreen(),
+        '/community': (context) => const CommunityScreen(),
+        '/itinerary-view': (context) => const ItineraryViewScreen(),
+      },
       home: const LoginPage(),
     );
   }

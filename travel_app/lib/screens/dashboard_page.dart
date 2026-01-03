@@ -6,6 +6,9 @@ import 'plan_trip_page.dart';
 import 'user_profile_pages.dart';
 import 'search_page.dart';
 import 'user_tripping_list_page.dart' show UserTripListingPage;
+import 'itenary_page.dart';
+import 'calander.dart';
+import 'community.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -96,7 +99,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('YATRA',
+        title: const Text('GlobalTrotter',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 30,
@@ -111,7 +114,32 @@ class _DashboardPageState extends State<DashboardPage> {
         foregroundColor: Colors.black,
         actions: [
           IconButton(
+            icon: const Icon(Icons.calendar_today),
+            tooltip: 'Calendar View',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CalendarScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.people),
+            tooltip: 'Community',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CommunityScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
             onPressed: _logout,
           ),
         ],
@@ -539,8 +567,15 @@ class _DashboardPageState extends State<DashboardPage> {
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${trip.title} trip selected')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItineraryPage(
+                  tripName: trip.title,
+                  tripStartDate: trip.startDate,
+                  tripEndDate: trip.endDate,
+                ),
+              ),
             );
           },
           borderRadius: BorderRadius.circular(8),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/trip_service.dart';
+import 'itenary_page.dart';
 
 class PlanTripPage extends StatefulWidget {
   const PlanTripPage({super.key});
@@ -174,7 +175,18 @@ Widget _buildBottomNav() {
           duration: Duration(seconds: 2),
         ),
       );
-      Navigator.pop(context, true);
+      
+      // Navigate to itinerary builder
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItineraryPage(
+            tripName: _tripNameController.text,
+            tripStartDate: _startDate!,
+            tripEndDate: _endDate!,
+          ),
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
