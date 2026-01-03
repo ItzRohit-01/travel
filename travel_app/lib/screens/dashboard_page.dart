@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import '../models/trip_model.dart';
-import '../services/trip_service.dart';
+import 'package:travel_app/services/auth_service.dart';
+import 'package:travel_app/models/trip_model.dart';
+import 'package:travel_app/services/trip_service.dart';
 import 'plan_trip_page.dart';
 import 'user_profile_pages.dart';
+import 'search_page.dart';
+import 'user_tripping_list_page.dart' show UserTripListingPage;
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -21,45 +23,11 @@ class _DashboardPageState extends State<DashboardPage> {
   List<PopularCity> _topRegionalSelections = [];
   bool _isLoading = true;
   String? _errorMessage;
-
-<<<<<<< HEAD
   @override
   void initState() {
     super.initState();
     _loadData();
   }
-=======
-  // Sample data for previous trips
-  final List<Trip> previousTrips = [
-    Trip(
-      id: '1',
-      title: 'Paris Adventure',
-      destination: 'Paris, France',
-      startDate: DateTime.now().subtract(const Duration(days: 30)),
-      endDate: DateTime.now().subtract  (const Duration(days: 23)),
-      image: '🗼',
-      status: 'Completed',
-    ),
-    Trip(
-      id: '2',
-      title: 'Tokyo Exploration',
-      destination: 'Tokyo, Japan',
-      startDate: DateTime.now().subtract(const Duration(days: 60)),
-      endDate: DateTime.now().subtract(const Duration(days: 45)),
-      image: '🗾',
-      status: 'Completed',
-    ),
-    Trip(
-      id: '3',
-      title: 'Barcelona Beach',
-      destination: 'Barcelona, Spain',
-      startDate: DateTime.now().subtract(const Duration(days: 90)),
-      endDate: DateTime.now().subtract(const Duration(days: 80)),
-      image: '🏖️',
-      status: 'Completed',
-    ),
-  ];
->>>>>>> ac9f9b3b0a7930cbba6ab33a5854d306923cae04
 
   Future<void> _loadData() async {
     final userId = _authService.currentUser?.uid;
@@ -148,7 +116,6 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-<<<<<<< HEAD
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
@@ -169,15 +136,15 @@ class _DashboardPageState extends State<DashboardPage> {
                             borderRadius: BorderRadius.circular(12),
                             gradient: LinearGradient(
                               colors: [
-                                Colors.blue.withOpacity(0.8),
-                                Colors.purple.withOpacity(0.8),
+                                Colors.blue.withValues(alpha: .8),
+                                Colors.purple.withValues(alpha: 0.8),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -214,85 +181,21 @@ class _DashboardPageState extends State<DashboardPage> {
                             ],
                           ),
                         ),
-=======
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Banner Image Section
-            Container(
-  width: double.infinity,
-  height: 180,
-  margin: const EdgeInsets.all(16),
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withValues(alpha: 0.08),
-        blurRadius: 12,
-        offset: const Offset(0, 4),
-      ),
-    ],
-  ),
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(12),
-    child: Stack(
-      fit: StackFit.expand,
-      children: [
-        // 🖼️ Background Image
-        Image.asset(
-          'assets/images/banner.jpg',
-          fit: BoxFit.cover,
-        ),
- 
-        // 🌟 Content (unchanged)
-        Stack(
-          children: [
-            Center(
-              child: Text(
-                'Plan your next journey',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      shadows: const [
-                        Shadow(
-                          color: Colors.black45,
-                          blurRadius: 8,
-                        ),
-                      ],
-                    ),
-              ),
-            ),
-            // const Positioned(
-            //   top: 10,
-            //   right: 20,
-            //   child: Text(
-            //     '✈️',
-            //     style: TextStyle(fontSize: 32),
-            //   ),
-            // ),
-            // const Positioned(
-            //   bottom: 10,
-            //   left: 20,
-            //   child: Text(
-            //     '🌍',
-            //     style: TextStyle(fontSize: 32),
-            //   ),
-            // ),
-          ],
-        ),
-      ],
-    ),
-  ),
-),
-
->>>>>>> ac9f9b3b0a7930cbba6ab33a5854d306923cae04
-
+                        // Search Bar
                         // Search Bar
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: TextField(
                             controller: _searchController,
+                            readOnly: true,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SearchPage(),
+                                ),
+                              );
+                            },
                             decoration: InputDecoration(
                               hintText: 'Search bar......',
                               prefixIcon: const Icon(Icons.search),
@@ -450,161 +353,42 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
-<<<<<<< HEAD
-=======
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Filter, Group, Sort buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Group by clicked')),
-                        );
-                      },
-                      icon: const Icon(Icons.category, size: 18),
-                      label: const Text('Group by'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Filter clicked')),
-                        );
-                      },
-                      icon: const Icon(Icons.tune, size: 18),
-                      label: const Text('Filter'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Sort by clicked')),
-                        );
-                      },
-                      icon: const Icon(Icons.sort, size: 18),
-                      label: const Text('Sort by...'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Top Regional Selections
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Top Regional Selections',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: topRegionalSelections.length,
-                      itemBuilder: (context, index) {
-                        final city = topRegionalSelections[index];
-                        return _buildRegionalSelectionCard(city);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // Previous Trips
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Previous Trips',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                       fontSize: 18,
-    fontWeight: FontWeight.w700,
-                          
-                        ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 180,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: previousTrips.length,
-                      itemBuilder: (context, index) {
-                        final trip = previousTrips[index];
-                        return _buildPreviousTripCard(trip);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Plan a Trip Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PlanTripPage(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Plan a trip'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
-      ),
->>>>>>> ac9f9b3b0a7930cbba6ab33a5854d306923cae04
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
-          if (index == 3) {
-            // Navigate to profile page when Profile tab is tapped
+          if (index == 1) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const UserProfilePage(),
+                builder: (context) => const SearchPage(),
+              ),
+            );
+            return;
+          }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserTripListingPage(),
+              ),
+            );
+            return;
+          }
+          if (index == 3) {
+            final authUser = _authService.currentUser;
+            final profileUser = authUser != null
+                ? UserProfile(
+                    id: authUser.uid,
+                    name: authUser.displayName ?? '',
+                    email: authUser.email ?? '',
+                    phone: authUser.phoneNumber ?? '',
+                    bio: '',
+                  )
+                : null;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserProfilePage(userProfile: profileUser),
               ),
             );
             return;
@@ -627,8 +411,8 @@ class _DashboardPageState extends State<DashboardPage> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
+            icon: Icon(Icons.list_alt),
+            label: 'My Trips',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -698,7 +482,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Image.network(
                         city.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[200],
                           child: const Icon(Icons.location_city, color: Colors.grey),
                         ),
@@ -774,7 +558,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Image.network(
                         trip.imageUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[200],
                           child: const Icon(Icons.photo, color: Colors.grey),
                         ),
